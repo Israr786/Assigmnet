@@ -1,0 +1,408 @@
+
+Test Cases:
+
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ 
+
+
+
+                                                 TEST CASE 1
+                                             Basic functionality
+
+
+ 
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+
+This test case is used to validate the XOR functionality, we take "input" file and encrypt it using  
+"keyFile". Encryption is performed using 4 threads to generate "x1" which is the encrypted cypher
+
+Now we take the encrypted cypher "x1" and decrypt it using the same key using various "N" of threads
+to generate "x1_double_process_with_<N>t" files. We compare all the "x1_double_process_with_<N>t" output files
+to make sure that are identical, and then we finally compre one of these files with "input" to make sure it is identical.
+
+Following snapshot from the terminal shows the output.
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C input
+00000000  01 02 03 04 11 12 13 14  01 02 03 04 11 12 13 14  |................|
+*
+00000040  01 02 03                                          |...|
+00000043
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump -C keyFile
+00000000  f0 f0                                             |..|
+00000002
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat input | ./encryptUtil -n 10 -k keyFile > x1
+thread count = 10
+file name = keyFile
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat x1 | ./encryptUtil -n 1 -k keyFile > x1_double_process_with_1t
+thread count = 1
+file name = keyFile
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat x1 | ./encryptUtil -n 2 -k keyFile > x1_double_process_with_2t
+thread count = 2
+file name = keyFile
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat x1 | ./encryptUtil -n 3 -k keyFile > x1_double_process_with_3t
+thread count = 3
+file name = keyFile
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat x1 | ./encryptUtil -n 4 -k keyFile > x1_double_process_with_4t
+thread count = 4
+file name = keyFile
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat x1 | ./encryptUtil -n 9 -k keyFile > x1_double_process_with_9t
+thread count = 9
+file name = keyFile
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat x1 | ./encryptUtil -n 8 -k keyFile > x1_double_process_with_8t
+thread count = 8
+file name = keyFile
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat x1 | ./encryptUtil -n 10 -k keyFile > x1_double_process_with_10t
+thread count = 10
+file name = keyFile
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat x1 | ./encryptUtil -n 100 -k keyFile > x1_double_process_with_100t
+thread count = 100
+file name = keyFile
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat x1 | ./encryptUtil -n 1000 -k keyFile > x1_double_process_with_1000t
+thread count = 1000
+file name = keyFile
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cmp x1_double_process_with_1t x1_double_process_with_2t
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cmp x1_double_process_with_1t x1_double_process_with_3t
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cmp x1_double_process_with_1t x1_double_process_with_4t
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cmp x1_double_process_with_1t x1_double_process_with_8t
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cmp x1_double_process_with_1t x1_double_process_with_9t
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cmp x1_double_process_with_1t x1_double_process_with_10t
+
+
+
+----------------------------------------------------------------
+finally compare the output against the input
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cmp x1_double_process_with_1t input
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe  -C x1_double_process_with_1t
+00000000  01 02 03 04 11 12 13 14  01 02 03 04 11 12 13 14  |................|
+*
+00000040  01 02 03                                          |...|
+00000043
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+#
+
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ 
+
+
+
+                                                 TEST CASE 2
+                                        Edge case of 0,1,2 byte input data    
+
+
+ 
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+-----------------------------------------------------------------------------------------INPUT Size 0
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat input_0size | ./encryptUtil -n 2 -k keyFile > output_0size
+thread count = 2
+file name = keyFile
+block size = 2
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C input_0size
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C output_0size
+
+
+----------------------------------------------------------------------------------------- INPUT Size 1
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C input_1size
+00000000  01                                                |.|
+00000001
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat input_1size | ./encryptUtil -n 2 -k keyFile > output_1size
+thread count = 2
+file name = keyFile
+block size = 2
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C output_1size
+00000000  f1                                                |.|
+00000001
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat output_1size | ./encryptUtil -n 2 -k keyFile > output_double_process_1size
+thread count = 2
+file name = keyFile
+block size = 2
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C output_double_process_1size
+00000000  01                                                |.|
+00000001
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+#
+
+
+----------------------------------------------------------------------------------------- INPUT Size 2
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C input_2size
+00000000  10 00                                             |..|
+00000002
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat input_2size | ./encryptUtil -n 1 -k keyFile > output_2size
+thread count = 1
+file name = keyFile
+block size = 2
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C output_2size
+00000000  e0 f0                                             |..|
+00000002
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat output_2size | ./encryptUtil -n 2 -k keyFile > output_double_process_2size
+thread count = 2
+file name = keyFile
+block size = 2
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C output_double_process_2size
+00000000  10 00                                             |..|
+00000002
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+#
+
+-------------------------------------------------------------------------------------------- key larger than input
+vv@Vv3 /cygdrive/c/bin/test_data/source/encryptUtil_pthread
+# cat ../../keyFile| ./encryptUtil -n 10 -k ../../input > out3
+thread count = 10
+file name = ../../input
+block size = 67
+
+Run Time = 0.000000
+
+vv@Vv3 /cygdrive/c/bin/test_data/source/encryptUtil_pthread
+# hexdump.exe -C out3
+00000000  f1 f2                                             |..|
+00000002
+
+vv@Vv3 /cygdrive/c/bin/test_data/source/encryptUtil_pthread
+# cat out3| ./encryptUtil -n 10 -k ../../input > out4
+thread count = 10
+file name = ../../input
+block size = 67
+
+Run Time = 0.000000
+
+vv@Vv3 /cygdrive/c/bin/test_data/source/encryptUtil_pthread
+# hexdump.exe -C out4
+00000000  f0 f0                                             |..|
+00000002
+
+vv@Vv3 /cygdrive/c/bin/test_data/source/encryptUtil_pthread
+#
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ 
+
+
+
+                                                 TEST CASE 3
+                                   Ensure that the key is rotating every N blocks    
+
+
+ 
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+TEST CASE: use an input of all 0x00 and apply a  key of 0x01 and see if the key repeats after 8(CHAR_BIT) blocks.
+  
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat input_data_of_all_0 | ./encryptUtil -n 5 -k key_of_value_1 > output_key_rotation
+thread count = 5
+file name = key_of_value_1
+block size = 1
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe  -C input_data_of_all_0
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+000000a0  00 00 00 00 00 00 00 00  00                       |.........|
+000000a9
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe  -C key_of_value_1
+00000000  01                                                |.|
+00000001
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe  -C output_key_rotation
+00000000  01 02 04 08 10 20 40 80  01 02 04 08 10 20 40 80  |..... @...... @.|
+*
+000000a0  01 02 04 08 10 20 40 80  01                       |..... @..|
+000000a9
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ 
+
+
+
+                                                 TEST CASE 4: 
+                                                 
+       Parameter Validation.
+       Ensure that a key file has been provided. 
+       Also, check if the key is all 0x00,if yes, notify the user (over stderr) that unencrypted data will be sent out.
+       Also, as a part of this check that errors are being sent to stderr.
+                      
+
+
+ 
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+----------------------------------------------------------------------------------------- No Arguments
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# ./encryptUtil
+Usage: encryptUtil [-n #] [-k keyfile]
+        -n: number of worker threads: default value 1
+        -k: name of the file with the key: MANDATORY FIELD
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+#
+
+
+----------------------------------------------------------------------------------------- stderr check
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# ./encryptUtil 2> error
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat error
+Usage: encryptUtil [-n #] [-k keyfile]
+        -n: number of worker threads: default value 1
+        -k: name of the file with the key: MANDATORY FIELD
+
+----------------------------------------------------------------------------------------- thread default value 1
+
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat input |./encryptUtil -k keyFile
+thread count = 1
+file name = keyFile
+block size = 2
+-.kl¦¦¦¦¦?¦
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+#
+
+
+----------------------------------------------------------------------------------------- option order interchange (-n [#] -k <file>) (-k <file> -n [#] 
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat input| ./encryptUtil -k keyFile -n 1
+thread count = 1
+file name = keyFile
+block size = 2
+-.kl¦¦¦¦¦?¦
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat input| ./encryptUtil -k keyFile -n 2
+thread count = 2
+file name = keyFile
+block size = 2
+-.kl¦¦¦¦¦?¦
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+#
+
+----------------------------------------------------------------------------------------- unknown options ( provide help to user over stderr )
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat input| ./encryptUtil -k keyFile -n 2 -t this is a test
+Usage: encryptUtil [-n #] [-k keyfile]
+        -n: number of worker threads: default value 1
+        -k: name of the file with the key: MANDATORY FIELD
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+#
+
+----------------------------------------------------------------------------------------- check if key is all 0x00 warn the user that encryption is OFF
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# cat input| ./encryptUtil -k key_of_value_0 -n 2 > output_no_encryption
+thread count = 2
+file name = key_of_value_0
+block size = 2
+
+key value is 0 : in order to encrypt the data key should be non-zero
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C input
+00000000  01 02 03 04 11 12 13 14  01 02 03 04 11 12 13 14  |................|
+*
+00000040  01 02 03                                          |...|
+00000043
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C output_no_encryption
+00000000  01 02 03 04 11 12 13 14  01 02 03 04 11 12 13 14  |................|
+*
+00000040  01 02 03                                          |...|
+00000043
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+# hexdump.exe -C key_of_value_0
+00000000  00 00                                             |..|
+00000002
+
+vv@Vv3 /cygdrive/c/bin/seb/pthreads/encrypt
+#
+
